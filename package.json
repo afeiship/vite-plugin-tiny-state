@@ -1,6 +1,6 @@
 {
   "name": "@jswork/vite-plugin-tiny-state",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Vite plugin for zero-config auto-discovery and registration of react-tiny-state store modules.",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.esm.js",
