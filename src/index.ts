@@ -62,7 +62,7 @@ export default stores;
     transform(code, id) {
       if (autoInject && id.replace(/\\/g, '/').includes(entryPattern)) {
         if (!code.includes(virtualModuleId)) {
-          return `import '${virtualModuleId}';\n` + code;
+          return `import '@jswork/react-tiny-state';\nimport '${virtualModuleId}';\n` + code;
         }
       }
     },

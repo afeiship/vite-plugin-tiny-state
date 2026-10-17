@@ -33,12 +33,12 @@ describe('vitePluginTinyState', () => {
     expect(code).toContain('import.meta.glob("/src/stores/m2/**/*.ts"');
   });
 
-  test('autoInjects virtual module import into main.tsx', () => {
+  test('autoInjects react-tiny-state and virtual module import into main.tsx', () => {
     const plugin = vitePluginTinyState({ autoInject: true });
     const transform = plugin.transform as any;
     const originalCode = "import React from 'react';";
     const res = transform.call({} as any, originalCode, '/project/src/main.tsx');
-    expect(res).toBe("import 'virtual:tiny-state';\n" + originalCode);
+    expect(res).toBe("import '@jswork/react-tiny-state';\nimport 'virtual:tiny-state';\n" + originalCode);
   });
 
   test('does not duplicate import if already present', () => {
