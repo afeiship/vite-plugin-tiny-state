@@ -1,29 +1,40 @@
 {
-  "name": "vite-cra",
-  "private": true,
-  "workspaces": {
-    "packages": [
-      "packages/*"
-    ]
-  },
-  "devDependencies": {
-    "lerna": "^3.22.1",
-    "npm-run-all": "^4.1.5"
-  },
+  "name": "@jswork/vite-plugin-tiny-state",
+  "version": "1.0.0",
+  "description": "Vite plugin for zero-config auto-discovery and registration of react-tiny-state store modules.",
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.esm.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "dev": "npm-run-all --parallel start:cra start:vite",
-    "start:cra": "yarn --cwd packages/cra start",
-    "start:vite": "yarn --cwd packages/vite dev",
-    "lerna:clean": "lerna clean",
-    "lerna:list": "lerna list",
-    "lerna:bootstrap": "lerna bootstrap",
-    "build": "lerna run build --since master --no-private",
-    "build:all": "lerna run build",
-    "publish": "npm run build && lerna publish --no-private"
+    "build": "tsup",
+    "test": "bun test",
+    "release": "release-it"
   },
-  "homepage": "https://js.work",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/afeiship/vite-cra.git"
-  }
+  "license": "MIT",
+  "devDependencies": {
+    "@jswork/next": "^1.2.6",
+    "@swc/core": "^1.3.101",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^18.15.5",
+    "tslib": "^2.6.2",
+    "tsup": "^8.0.1",
+    "typescript": "^4.9.5",
+    "vite": "^5.4.7"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "peerDependencies": {
+    "@jswork/next": "*"
+  },
+  "keywords": [
+    "vite",
+    "plugin",
+    "react",
+    "vanilla-javascript"
+  ]
 }
