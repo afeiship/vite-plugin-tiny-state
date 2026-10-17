@@ -7,7 +7,7 @@
 [![download][download-image]][download-url]
 
 ## features
-- 🚀 **Zero Configuration**: Automatically scans `src/stores/modules/**/*.ts` and registers stores to `nx`.
+- 🚀 **Zero Configuration**: Automatically scans `src/stores/**/*.ts` and registers stores to `nx`.
 - 📁 **Nested Subdirectories**: Supports nested paths (e.g. `member/profile.ts` -> `memberProfile`, `member/index.ts` -> `member`).
 - 💉 **Auto-Injection**: Injects `import 'virtual:tiny-state';` into entry point (`src/main.tsx`) at compile time.
 - ⚡ **Virtual Module**: Exposes `virtual:tiny-state` for manual imports if preferred.
@@ -39,7 +39,7 @@ export default defineConfig({
 Create store modules in `src/stores/`:
 
 ```ts
-// src/stores/modules/counter.ts
+// src/stores/counter.ts
 import nx from '@jswork/next';
 
 export default nx.$defineStore({
@@ -53,7 +53,7 @@ export default nx.$defineStore({
 
 Nested subdirectories are fully supported:
 ```ts
-// src/stores/modules/member/profile.ts -> module name: memberProfile
+// src/stores/member/profile.ts -> module name: memberProfile
 export default nx.$defineStore({
   state: { nickname: 'Alice' },
 });
@@ -76,7 +76,7 @@ function Counter() {
 vitePluginTinyState({
   /**
    * Glob pattern to scan store modules.
-   * @default '/src/stores/modules/**\/*.ts'
+   * @default '/src/stores/**\/*.ts'
    */
   pattern?: string;
 

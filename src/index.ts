@@ -4,7 +4,7 @@ export interface TinyStatePluginOptions {
   /**
    * Pattern to glob store modules.
    * Supports single or nested subdirectories (e.g. member/profile.ts).
-   * @default '/src/stores/modules/**\/*.ts'
+   * @default '/src/stores/**\/*.ts'
    */
   pattern?: string;
   /**

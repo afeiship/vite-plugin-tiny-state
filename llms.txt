@@ -1,0 +1,136 @@
+# vite-plugin-tiny-state
+
+> Vite plugin (npm: `@jswork/vite-plugin-tiny-state`) for zero-config auto-discovery and registration of `@jswork/react-tiny-state` store modules.
+
+The plugin automates store module discovery in Vite projects:
+1. Dynamically generates a virtual module `virtual:tiny-state` that executes `nx.$registerStores(import.meta.glob('/src/stores/**/*.ts', { eager: true, import: 'default' }))`.
+2. Automatically injects `import 'virtual:tiny-state';` into the application entry point (`src/main.tsx`) at compile time.
+3. Developers can create store modules under `src/stores/` without writing any manual `import` or registration code in the app.
+
+## Quick Start
+
+### 1. Configure Vite (`vite.config.ts`)
+
+```ts
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import vitePluginTinyState from '@jswork/vite-plugin-tiny-state';
+
+export default defineConfig({
+  plugins: [
+    react(),
+    vitePluginTinyState(), // Zero configuration auto-registration
+  ],
+});
+```
+
+### 2. Define Stores (`src/stores/*.ts` or `src/stores/**/*.ts`)
+
+Store files export a store descriptor wrapped with `nx.$defineStore`:
+
+```ts
+// src/stores/counter.ts -> module name: counter
+import nx from '@jswork/next';
+
+export default nx.$defineStore({
+  state: { count: 0 },
+  getters: {
+    double: (state) => state.count * 2,
+  },
+  actions: {
+    increment: (state) => nx.$set('counter.count', state.count + 1),
+    decrement: (state) => nx.$set('counter.count', state.count - 1),
+    reset: () => nx.$set('counter.count', 0),
+  },
+});
+```
+
+#### Nested Subdirectories
+
+Nested directories automatically convert to camelCase module names:
+- `src/stores/member/profile.ts` -> Module name: `memberProfile`
+- `src/stores/member/orders.ts` -> Module name: `memberOrders`
+- `src/stores/member/index.ts` -> Module name: `member` (strips `/index`)
+
+```ts
+// src/stores/member/profile.ts -> module name: memberProfile
+import nx from '@jswork/next';
+
+export default nx.$defineStore({
+  state: {
+    nickname: 'Alice',
+    vipLevel: 1,
+  },
+  actions: {
+    setNickname: (_state, _getters, name: string) => nx.$set('memberProfile.nickname', name),
+  },
+});
+```
+
+### 3. Consume in React Components
+
+No store imports needed inside components. Directly use `nx` global methods:
+
+```tsx
+import nx from '@jswork/next';
+
+export default function CounterView() {
+  // Read reactive state
+  const count = nx.$use('counter.count');
+  const double = nx.$use('counter.double');
+  const nickname = nx.$use('memberProfile.nickname');
+
+  return (
+    <div>
+      <p>User: {nickname}</p>
+      <p>Count: {count} (Double: {double})</p>
+      <button onClick={() => nx.$call('counter.increment')}>+1</button>
+      <button onClick={() => nx.$set('memberProfile.nickname', 'Bob')}>Change Name</button>
+    </div>
+  );
+}
+```
+
+## Options
+
+```ts
+interface TinyStatePluginOptions {
+  /**
+   * Glob pattern to scan store modules.
+   * Supports single or nested subdirectories.
+   * @default '/src/stores/**\/*.ts'
+   */
+  pattern?: string;
+
+  /**
+   * Automatically inject `import 'virtual:tiny-state';` into entry file.
+   * Set to `false` if you prefer importing `virtual:tiny-state` manually.
+   * @default true
+   */
+  autoInject?: boolean;
+
+  /**
+   * Target entry file path substring to inject virtual module.
+   * @default 'src/main.tsx'
+   */
+  entry?: string;
+}
+```
+
+## TypeScript Configuration
+
+If TypeScript complains about `virtual:tiny-state`, add the following to `src/vite-env.d.ts`:
+
+```ts
+declare module 'virtual:tiny-state' {
+  export const stores: Record<string, any>;
+  export default stores;
+}
+```
+
+## Documentation & Source
+
+- [README.md](README.md): Installation and detailed usage guide
+- [src/index.ts](src/index.ts): Plugin implementation
+- [package.json](package.json): Package metadata and dependencies
+- [__tests__/index.spec.ts](__tests__/index.spec.ts): Unit tests
