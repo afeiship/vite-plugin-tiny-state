@@ -36,7 +36,7 @@ export default defineConfig({
 
 ### 2. Define store modules
 
-Create store modules in `src/stores/modules/`:
+Create store modules in `src/stores/`:
 
 ```ts
 // src/stores/modules/counter.ts
